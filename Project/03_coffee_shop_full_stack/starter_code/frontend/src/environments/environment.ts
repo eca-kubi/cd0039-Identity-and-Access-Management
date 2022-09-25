@@ -9,6 +9,6 @@ export const environment = {
     url: 'ecakubi.us', // the auth0 domain prefix
     audience: 'https://coffeeshop.softenprise.com/api/v2/', // the audience set for the auth0 app
     clientId: '9xO9qDfNZiaqFmQ5ZpKWOarm8SEnm5Xu', // the client id generated for the auth0 app
-    callbackURL: 'http://localhost:8100', // the base url of the running ionic application. 
+    callbackURL: 'http://localhost:8100', // the base url of the running ionic application.
   }
 };

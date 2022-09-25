@@ -1,4 +1,6 @@
 import json
+import os
+
 from flask import request, _request_ctx_stack, abort
 from functools import wraps
 from jose import jwt
@@ -7,7 +9,7 @@ from urllib.request import urlopen
 AUTH0_DOMAIN = 'ecakubi.us.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'https://coffeeshop.softenprise.com/api/v2/'
-AUTH0_CLIENT_ID = '9xO9qDfNZiaqFmQ5ZpKWOarm8SEnm5Xu'
+AUTH0_CLIENT_ID = os.environ.get('AUTH0_CLIENT_ID')
 
 # AuthError Exception
 '''
