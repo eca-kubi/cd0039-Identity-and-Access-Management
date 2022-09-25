@@ -7,6 +7,7 @@ from urllib.request import urlopen
 AUTH0_DOMAIN = 'ecakubi.us.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'https://coffeeshop.softenprise.com/api/v2/'
+AUTH0_CLIENT_ID = '9xO9qDfNZiaqFmQ5ZpKWOarm8SEnm5Xu'
 
 # AuthError Exception
 '''
@@ -114,6 +115,7 @@ def verify_decode_jwt(token):
     jwks = json.loads(jsonurl.read())
     unverified_header = jwt.get_unverified_header(token)
     rsa_key = {}
+    payload = {"permissions": ""}
     if 'kid' not in unverified_header:
         raise AuthError({
             'code': 'invalid_header',
@@ -152,15 +154,19 @@ def verify_decode_jwt(token):
                 'code': 'invalid_claims',
                 'description': 'Incorrect claims. Please, check the audience and issuer.'
             }, 401)
+
         except Exception:
             raise AuthError({
                 'code': 'invalid_header',
                 'description': 'Unable to parse authentication token.'
             }, 400)
-    raise AuthError({
-        'code': 'invalid_header',
-        'description': 'Unable to find the appropriate key.'
-    }, 400)
+
+    return payload
+    # else:
+    #     raise AuthError({
+    #         'code': 'invalid_header',
+    #         'description': 'Unable to find the appropriate key.'
+    #     }, 400)
 
 
 '''
@@ -179,13 +185,13 @@ def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            token = get_token_auth_header()
             payload = ""
             try:
+                token = get_token_auth_header()
                 payload = verify_decode_jwt(token)
                 check_permissions(permission, payload)
-            except:
-                abort(401)
+            except AuthError as err:
+                abort(err.status_code)
 
             return f(payload, *args, **kwargs)
 
